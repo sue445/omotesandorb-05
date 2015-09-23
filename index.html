@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+<title>【今月のgem】index_shotgunを作った #omotesandorb</title>
+
+<meta name="description" content="">
+<meta name="author" content="sue445">
+<meta name="generator" content="reveal-ck 3.2.0">
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+<!-- Code syntax highlighting -->
+<link rel="stylesheet" href="lib/css/zenburn.css">
+
+<link rel="stylesheet" href="css/reveal-ck.css">
+
+
+<!-- Printing and PDF exports -->
+<script>
+  var link = document.createElement( 'link' );
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+  document.getElementsByTagName( 'head' )[0].appendChild( link );
+</script>
+
+<!--[if lt IE 9]>
+<script src="lib/js/html5shiv.js"></script>
+<![endif]-->
+
+  </head>
+
+  <body>
+    <div class="reveal">
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
+    <section>
+
+<h2>【今月のgem】index_shotgunを作った #omotesandorb</h2>
+
+<p>sue445</p>
+
+<p>2015/10/01 表参道.rb #5</p>
+
+</section>
+<section>
+
+<h2>自己紹介</h2>
+
+<p><a href="https://twitter.com/sue445"><img src="img/sue445.png" alt="sue445"></a></p>
+
+<ul>
+<li><a href="https://twitter.com/sue445">sue445</a></li>
+<li>
+<a href="http://www.drecom.co.jp/">株式会社ドリコム</a> 所属</li>
+<li>サーバサイド全般の雑用
+
+<ul>
+<li>インフラ、アプリ、ライブラリ、社内ツールetc</li>
+<li>最近はアプリの改善系がメイン</li>
+</ul>
+</li>
+<li>TDDおじさん</li>
+<li>プリキュアおじさん</li>
+</ul>
+
+</section>
+<section>
+
+<h2>【今期の嫁】キュアトゥインクル</h2>
+
+<p><img src="img/cure_twinkle.png" alt="cure_twinkle"></p>
+
+</section>
+<section>
+
+<h2>【本妻】キュアピース</h2>
+
+<p><img src="img/cure_peace.jpg" alt="cure_peace"></p>
+
+</section>
+<section>
+
+<h2>Agenda</h2>
+
+<ul>
+<li>前置き</li>
+<li>gemの紹介</li>
+<li>使い方</li>
+<li>重複index検出ロジック</li>
+<li>不要なindexを消す理由</li>
+<li>まとめ</li>
+</ul>
+
+</section>
+<section>
+<section>
+
+<h2>前置き</h2>
+
+<ul>
+<li>DB容量の容量圧迫してたので削除できる不要indexの調査</li>
+<li>本来ならアプリのソースを全部頭に入れて発行されるSQLを全部explainをとるべきだが、270テーブルあったのでアプリのソース読むのは諦めて機械的に抽出するようにした</li>
+</ul>
+
+</section>
+<section>
+
+<h3>最初に作ったスクリプト</h3>
+
+<p><a href="https://gist.github.com/sue445/f890ea3fb5ef4fb5b9da">https://gist.github.com/sue445/f890ea3fb5ef4fb5b9da</a></p>
+<pre><code class="sh">bundle exec rails r scripts/search_duplicate_indexes.rb
+</code></pre>
+</section>
+<section>
+
+<h3>pt-duplicate-key-checker</h3>
+
+<ul>
+<li>これを作った後に WEB+DB PRESS Vol.88 を読んで全く同じ用途の <a href="https://www.percona.com/doc/percona-toolkit/2.1/pt-duplicate-key-checker.html">pt-duplicate-key-checker</a> があることを知ったｗ
+
+<ul>
+<li>実際よかった</li>
+</ul>
+</li>
+<li>詳しいこと：<a href="http://sue445.hatenablog.com/entry/2015/09/05/200316">Macでpercona-toolkitを使う方法 - くりにっき</a>
+</li>
+</ul>
+
+</section>
+</section>
+<section>
+
+<h2>index_shotgun <img class="emoji" title=":fire:" alt=":fire:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f525.png" align="absmiddle"> <img class="emoji" title=":gun:" alt=":gun:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f52b.png" align="absmiddle"> <img class="emoji" title=":cop:" alt=":cop:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f46e.png" align="absmiddle">
+</h2>
+
+<p><a href="https://github.com/sue445/index_shotgun">https://github.com/sue445/index_shotgun</a></p>
+
+<ul>
+<li>さっきの重複indexチェックスクリプトをベースにした、重複indexを抽出するためのgemです</li>
+<li>active_recordベースなので、<a href="https://www.percona.com/doc/percona-toolkit/2.1/pt-duplicate-key-checker.html">pt-duplicate-key-checker</a> とは違いMySQL以外でも使えます
+
+<ul>
+<li>そのDBで本当に重複indexであるか妥当かどうかは厳密には精査していない</li>
+</ul>
+</li>
+<li>名前の由来は <a href="http://www.oreilly.co.jp/books/9784873115894/">SQLアンチパターン</a> の1つの「インデックスショットガン（闇雲インデックス）」です</li>
+</ul>
+
+</section>
+<section>
+<section>
+
+<h2>使い方（Gemfileに書く方法）</h2>
+<pre><code class="sh">rake index_shotgun:fire
+</code></pre>
+<p>タスク名が <del>厨二病</del> カッコいい</p>
+
+</section>
+<section>
+
+<h3>実行結果</h3>
+<pre><code class="sh"># =============================
+# user_stocks
+# =============================
+# index_user_stocks_on_user_id is a left-prefix of index_user_stocks_on_user_id_and_article_id
+# To remove this duplicate index, execute:
+ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id`;
+# =============================
+# user_stocks
+# =============================
+# index_user_stocks_on_user_id_and_article_id_and_already_read has unnecessary column already_read (index_user_stocks_on_user_id_and_article_id is unique index!)
+# To remove this duplicate index, execute:
+ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id_and_article_id_and_already_read`;
+# =============================
+# user_stocks
+# =============================
+# index_user_stocks_on_user_id is a left-prefix of index_user_stocks_on_user_id_and_article_id_and_already_read
+# To remove this duplicate index, execute:
+ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id`;
+
+# ########################################################################
+# Summary of indexes
+# ########################################################################
+# Total Duplicate Indexes  3
+# Total Indexes            6
+# Total Tables             5
+</code></pre>
+</section>
+</section>
+<section>
+
+<h2>使い方（コマンドラインから使う方法）</h2>
+<pre><code class="sh">index_shotgun mysql --database=DATABASE
+index_shotgun postgresql --database=DATABASE
+index_shotgun sqlite3 --database=DATABASE
+</code></pre>
+<ul>
+<li>出力形式はさっきと同じ</li>
+<li>別途 mysql2, pg, sqlite3などのgemが必要</li>
+</ul>
+
+</section>
+<section>
+
+<h2>重複index検出ロジック</h2>
+
+<p>基本は前方一致</p>
+
+<ul>
+<li>同じテーブルに [column<em>1, column</em>2] と [column<em>1, column</em>2, column_3] のindexが混在していた時は前者を削除（多い方の前方一致でまかなえるため）</li>
+<li>前者がunique indexだった場合、cardinalityによっては後者のindexが削除できる
+
+<ul>
+<li>例：column_3がbooleanだったので後者を消した（NULLを考慮しても3パターンしか値をとらないｗ）</li>
+</ul>
+</li>
+</ul>
+
+</section>
+<section>
+
+<h2>不要なindexを消す理由</h2>
+
+<ul>
+<li>ストレージの容量を喰う
+
+<ul>
+<li>2.6億レコードのテーブルで不要なindexを1つ消すだけで18GB削減されたｗ</li>
+</ul>
+</li>
+<li>INSERTやUPDATE時にそのindexも更新されるのでその分遅くなる</li>
+<li>（MySQLだと）同じクエリでも意図しないindexが使われて遅くなることがある
+
+<ul>
+<li>user_idによって使われるindexが変わって遅くなることがあった</li>
+</ul>
+</li>
+</ul>
+
+</section>
+<section>
+
+<h2>まとめ</h2>
+
+<p>不要なindexはこまめにチェックしよう</p>
+
+</section>
+
+  </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  (function() {
+  function extend( a, b ) {
+    for(var i in b) {
+      a[i] = b[i];
+    }
+  }
+  var baseOptions = {
+    transition: 'default',
+
+    dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+    ]
+  };
+  var configOptions = {"controls":true,"progress":true,"history":true,"center":true}
+  var initializeOptions = {};
+  extend(initializeOptions, baseOptions);
+  extend(initializeOptions, configOptions);
+  Reveal.initialize(initializeOptions);
+})();
+
+</script>
+
+  </body>
+</html>
