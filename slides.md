@@ -130,3 +130,18 @@ index_shotgun sqlite3 --database=DATABASE
 ---
 ## まとめ
 不要なindexはこまめにチェックしよう
+
+<!--
+  disable uppercase
+  via. http://srz-zumix.blogspot.jp/2014/09/revealjs-markdown.html
+-->
+<style type="text/css">
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4,
+    .reveal h5,
+    .reveal h6 {
+      text-transform: none;
+    }
+</style>
