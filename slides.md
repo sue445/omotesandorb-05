@@ -35,8 +35,8 @@ sue445
 ***
 
 ## 前置き
-* DB容量の容量圧迫してたので削除できる不要indexの調査
-* 本来ならアプリのソースを全部頭に入れて発行されるSQLを全部explainをとるべきだが、270テーブルあったのでアプリのソース読むのは諦めて機械的に抽出するようにした
+* DBの容量圧迫してたので削除できる不要indexの調査してた
+* 本来ならアプリで発行されるSQLを全部explainをとって1つずつ精査すべきだが、大変そうだったので機械的に抽出するできるものを削除する方向にした
 
 ---
 ### 最初に作ったスクリプト
@@ -50,24 +50,31 @@ bundle exec rails r scripts/search_duplicate_indexes.rb
 ### pt-duplicate-key-checker
 * これを作った後に WEB+DB PRESS Vol.88 を読んで全く同じ用途の [pt-duplicate-key-checker](https://www.percona.com/doc/percona-toolkit/2.1/pt-duplicate-key-checker.html) があることを知ったｗ
   * 実際よかった
+  * 結果もだいたい同じ
 * 詳しいこと：[Macでpercona-toolkitを使う方法 - くりにっき](http://sue445.hatenablog.com/entry/2015/09/05/200316)
 
 ***
 ## index_shotgun :fire: :gun: :cop: 
 https://github.com/sue445/index_shotgun
 
-* さっきの重複indexチェックスクリプトをベースにした、重複indexを抽出するためのgemです
+* さっきのスクリプトをベースにした、重複indexを抽出するためのgemです
 * active_recordベースなので、[pt-duplicate-key-checker](https://www.percona.com/doc/percona-toolkit/2.1/pt-duplicate-key-checker.html) とは違いMySQL以外でも使えます
   * そのDBで本当に重複indexであるか妥当かどうかは厳密には精査していない
 * 名前の由来は [SQLアンチパターン](http://www.oreilly.co.jp/books/9784873115894/) の1つの「インデックスショットガン（闇雲インデックス）」です
 
 ***
 ## 使い方（Gemfileに書く方法）
+```ruby
+group :development do
+  gem 'index_shotgun'
+end
+```
+
 ```sh
 rake index_shotgun:fire
 ```
 
-タスク名が ~~厨二病~~ カッコいい
+タスク名が ~~厨二病~~ カッコいい :fire:
 
 ---
 ### 実行結果
@@ -102,6 +109,8 @@ ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id`;
 ***
 
 ## 使い方（コマンドラインから使う方法）
+`gem install` して
+
 ```sh
 index_shotgun mysql --database=DATABASE
 index_shotgun postgresql --database=DATABASE
