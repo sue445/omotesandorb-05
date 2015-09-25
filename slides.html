@@ -63,8 +63,8 @@
 <h2>前置き</h2>
 
 <ul>
-<li>DB容量の容量圧迫してたので削除できる不要indexの調査</li>
-<li>本来ならアプリのソースを全部頭に入れて発行されるSQLを全部explainをとるべきだが、270テーブルあったのでアプリのソース読むのは諦めて機械的に抽出するようにした</li>
+<li>DBの容量圧迫してたので削除できる不要indexの調査してた</li>
+<li>本来ならアプリで発行されるSQLを全部explainをとって1つずつ精査すべきだが、大変そうだったので機械的に抽出するできるものを削除する方向にした</li>
 </ul>
 
 </section>
@@ -85,6 +85,7 @@
 
 <ul>
 <li>実際よかった</li>
+<li>結果もだいたい同じ</li>
 </ul>
 </li>
 <li>詳しいこと：<a href="http://sue445.hatenablog.com/entry/2015/09/05/200316">Macでpercona-toolkitを使う方法 - くりにっき</a>
@@ -101,7 +102,7 @@
 <p><a href="https://github.com/sue445/index_shotgun">https://github.com/sue445/index_shotgun</a></p>
 
 <ul>
-<li>さっきの重複indexチェックスクリプトをベースにした、重複indexを抽出するためのgemです</li>
+<li>さっきのスクリプトをベースにした、重複indexを抽出するためのgemです</li>
 <li>active_recordベースなので、<a href="https://www.percona.com/doc/percona-toolkit/2.1/pt-duplicate-key-checker.html">pt-duplicate-key-checker</a> とは違いMySQL以外でも使えます
 
 <ul>
@@ -116,9 +117,13 @@
 <section>
 
 <h2>使い方（Gemfileに書く方法）</h2>
+<pre><code class="ruby">group :development do
+  gem 'index_shotgun'
+end
+</code></pre>
 <pre><code class="sh">rake index_shotgun:fire
 </code></pre>
-<p>タスク名が <del>厨二病</del> カッコいい</p>
+<p>タスク名が <del>厨二病</del> カッコいい <img class="emoji" title=":fire:" alt=":fire:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f525.png" align="absmiddle"></p>
 
 </section>
 <section>
@@ -155,6 +160,8 @@ ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id`;
 <section>
 
 <h2>使い方（コマンドラインから使う方法）</h2>
+
+<p><code>gem install</code> して</p>
 <pre><code class="sh">index_shotgun mysql --database=DATABASE
 index_shotgun postgresql --database=DATABASE
 index_shotgun sqlite3 --database=DATABASE
