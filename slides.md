@@ -32,7 +32,7 @@ sue445
 * 不要なindexを消す理由
 * まとめ
 
-***
+---
 
 ## 前置き
 * DBの容量圧迫してたので削除できる不要indexの調査してた
@@ -53,7 +53,7 @@ bundle exec rails r scripts/search_duplicate_indexes.rb
   * 結果もだいたい同じ
 * 詳しいこと：[Macでpercona-toolkitを使う方法 - くりにっき](http://sue445.hatenablog.com/entry/2015/09/05/200316)
 
-***
+---
 ## index_shotgun :fire: :gun: :cop: 
 https://github.com/sue445/index_shotgun
 
@@ -62,7 +62,7 @@ https://github.com/sue445/index_shotgun
   * そのDBで本当に重複indexであるか妥当かどうかは厳密には精査していない
 * 名前の由来は [SQLアンチパターン](http://www.oreilly.co.jp/books/9784873115894/) の1つの「インデックスショットガン（闇雲インデックス）」です
 
-***
+---
 ## 使い方（Gemfileに書く方法）
 ```ruby
 group :development do
@@ -106,7 +106,7 @@ ALTER TABLE `user_stocks` DROP INDEX `index_user_stocks_on_user_id`;
 # Total Indexes            6
 # Total Tables             5
 ```
-***
+---
 
 ## 使い方（コマンドラインから使う方法）
 `gem install` して
