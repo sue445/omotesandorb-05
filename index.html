@@ -237,7 +237,8 @@ index_shotgun sqlite3 --database=DATABASE
 <li>ストレージの容量を喰う
 
 <ul>
-<li>2.6億レコードのテーブルで不要なindexを1つ消すだけで18GB削減されたｗ</li>
+<li>2.2億レコードのテーブルで不要なindexを1つ消すだけで18GB削減されたｗ</li>
+<li>ただしDROP INDEXだけだと容量減らないことがあるので注意（MySQLだとDROP INDEXした後にOPTIMIZEしないと容量減らない）</li>
 </ul>
 </li>
 <li>INSERTやUPDATE時にそのindexも更新されるのでその分遅くなる</li>
