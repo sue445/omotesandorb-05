@@ -131,7 +131,8 @@ index_shotgun sqlite3 --database=DATABASE
 ---
 ## 不要なindexを消す理由
 * ストレージの容量を喰う
-  * 2.6億レコードのテーブルで不要なindexを1つ消すだけで18GB削減されたｗ
+  * 2.2億レコードのテーブルで不要なindexを1つ消すだけで18GB削減されたｗ
+  * ただしDROP INDEXだけだと容量減らないことがあるので注意（MySQLだとDROP INDEXした後にOPTIMIZEしないと容量減らない）
 * INSERTやUPDATE時にそのindexも更新されるのでその分遅くなる
 * （MySQLだと）同じクエリでも意図しないindexが使われて遅くなることがある
   * user_idによって使われるindexが変わって遅くなることがあった
